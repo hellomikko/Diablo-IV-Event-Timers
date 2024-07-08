@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Diablo IV Event Timers</title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css'>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/daisyui/4.12.10/full.css'><link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diablo 4 Event Timer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+
+<body class="bg-gray-900 text-white flex flex-col items-center justify-start min-h-screen p-4 relative">
+  <h1 class="text-5xl font-bold text-center mb-4">Event Timers</h1>
+  <div class="absolute top-4 right-4">
+    <button id="openPopup" class="text-white text-2xl"><i class="fas fa-clock"></i></button>
+  </div>
+  <div class="container mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="card bg-gray-800 shadow-xl p-6 relative" id="worldBoss">
+        <div class="card-icons">
+          <button id="notifWorldBoss" class="icon-btn"><i class="fa-regular fa-bell"></i></button>
+        </div>
+        <div class="card-icons-right">
+          <button id="soundWorldBoss" class="icon-btn"><i class="fas fa-volume-up"></i></button>
+          <input type="range" id="worldBossVolume" min="0" max="0.75" step="0.01" value="0.5" class="volume-control">
+        </div>
+        <div class="content">
+          <h2 class="text-2xl font-bold mb-4">Next World Boss</h2>
+          <p id="worldBossTimer" class="text-xl"></p>
+          <p id="worldBossDetails" class="text-gray-400"></p>
+        </div>
+        <audio id="worldBossAudio" src="https://github.com/nolvuscodes/D4Hub-App/blob/main/public/srcs/eventmp3/wboss.mp3"></audio>
+      </div>
+      <div class="card bg-gray-800 shadow-xl p-6 relative" id="helltide">
+        <div class="card-icons">
+          <button id="notifHelltide" class="icon-btn"><i class="fa-regular fa-bell"></i></button>
+        </div>
+        <div class="card-icons-right">
+          <button id="soundHelltide" class="icon-btn"><i class="fas fa-volume-up"></i></button>
+          <input type="range" id="helltideVolume" min="0" max="0.75" step="0.01" value="0.5" class="volume-control">
+        </div>
+        <div class="content">
+          <h2 class="text-2xl font-bold mb-4 text-green-500">Helltide Active!</h2>
+          <p id="helltideTimer" class="text-xl"></p>
+          <p id="helltideDetails" class="text-gray-400"></p>
+        </div>
+        <audio id="helltideAudio" src="https://github.com/nolvuscodes/D4Hub-App/blob/main/public/srcs/eventmp3/helltides.mp3"></audio>
+      </div>
+      <div class="card bg-gray-800 shadow-xl p-6 relative" id="legion">
+        <div class="card-icons">
+          <button id="notifLegion" class="icon-btn"><i class="fa-regular fa-bell"></i></button>
+        </div>
+        <div class="card-icons-right">
+          <button id="soundLegion" class="icon-btn"><i class="fas fa-volume-up"></i></button>
+          <input type="range" id="legionVolume" min="0" max="0.75" step="0.01" value="0.5" class="volume-control">
+        </div>
+        <div class="content">
+          <h2 class="text-2xl font-bold mb-4">Next Legion</h2>
+          <p id="legionTimer" class="text-xl"></p>
+          <p id="legionDetails" class="text-gray-400"></p>
+        </div>
+        <audio id="legionAudio" src="https://github.com/nolvuscodes/D4Hub-App/blob/main/public/srcs/eventmp3/legion.mp3"></audio>
+      </div>
+    </div>
+  </div>
+  <div class="absolute bottom-4 right-4">
+    <button id="openUpdates" class="text-white text-2xl"><i class="fa fa-triangle-exclamation fa-beat" style="--fa-primary-color: #c2b30f; --fa-secondary-color: #ccbb00;"></i></button>
+  </div>
+
+  <script>
+    document.getElementById('openPopup').addEventListener('click', () => {
+      const popupContent = `
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Event Timers</title>
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+          <style>
+            body {
+              background-color: #1a202c;
+              color: #a0aec0;
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 20px;
+            }
+            .container {
+              max-width: 800px;
+              margin: auto;
+            }
+            .card {
+              padding: 20px;
+              margin-bottom: 20px;
+              background-color: #2d3748;
+              border-radius: 8px;
+              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            .card h2 {
+              font-size: 24px;
+              margin-bottom: 10px;
+            }
+            .card p {
+              font-size: 18px;
+            }
+            .popup-header {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            }
+            .icon-btn {
+              background: none;
+              border: none;
+              color: white;
+              cursor: pointer;
+              font-size: 1.5rem;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="popup-header">
+            <h1 class="text-2xl font-bold">Event Timers</h1>
+            <div>
+              <button id="pinPopup" class="icon-btn"><i class="fas fa-thumbtack"></i></button>
+              <button id="closePopup" class="icon-btn"><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+          <div class="container">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              ${document.querySelector('.container .grid').innerHTML}
+            </div>
+          </div>
+          
+            document.getElementById('closePopup').addEventListener('click', () => {
+              window.close();
+            });
+
+            let isPinned = false;
+            document.getElementById('pinPopup').addEventListener('click', () => {
+              isPinned = !isPinned;
+              if (isPinned) {
+                document.body.style.backgroundColor = '#1a202c';
+                window.document.getElementById('pinPopup').querySelector('i').style.color = 'yellow';
+                window.alert('Pinning is not supported by browsers directly. Use system features to keep this window on top.');
+              } else {
+                window.document.getElementById('pinPopup').querySelector('i').style.color = 'white';
+              }
+            });
+
+</body>
+
+</html>
+`;
+      const popup = window.open('', 'Event Timers', 'width=800,height=600');
+      popup.document.write(popupContent);
+      popup.document.close(); // Ensure the document is fully loaded before attaching event listeners
+    });
+    document.getElementById('openUpdates').addEventListener('click', () => {
+      const updatesContent = `
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Updates</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    body {
+      background-color: #1a202c;
+      color: #a0aec0;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .card {
+      padding: 20px;
+      margin-bottom: 20px;
+      background-color: #2d3748;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .card h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 18px;
+    }
+
+    .popup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="popup-header">
+    <h1 class="text-2xl font-bold">Updates</h1>
+
+
+    </div>
+    <div class="container">
+      <div class="card">
+        <h2>Updates & Changes</h2>
+        <ul>
+          <li><strong>Date:</strong> 08 July 2024 - Initial creation of event timers.</li>
+          <li><strong>Date:</strong> 08 July 2024 - Added Helltide Active state.</li>
+          <li><strong>Date:</strong> 08 July 2024 - Added notification and volume controls.</li>
+          <li><strong>Date:</strong> 08 July 2024 - Improved layout and reduced excess space.</li>
+          <li><strong>Date:</strong> 08 July 2024 - Added new window with pin and close functionality.</li>
+          <li><strong>Date:</strong> 08 July 2024 - Added updates and changes popup window.</li>
+          <li><strong>Date:</strong> 08 July 2024 - Added Triangle Exlamation near the bottom right.</li>
+        </ul>
+      </div>
+    </div>
+        </body> </html>
+        `;
+      const updatesPopup = window.open('', 'See the Updates', 'width=800,height=390');
+      updatesPopup.document.write(updatesContent);
+    });
+  </script>
+
+</body>
+
+</html>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/fontawesome-iconpicker/3.2.0/js/fontawesome-iconpicker.min.js'></script>
+<script src='https://kit.fontawesome.com/030cb1e2a7.js'></script><script  src="./script.js"></script>
+
+</body>
+</html>
